@@ -1,0 +1,128 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>GIS WebToolKit SE - пример использования</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    
+    <!-- подключение jquery -->
+    <link href="jquery/jquery-ui.css" rel="stylesheet"/>
+    <script src="jquery/jquery-1.11.0.min.js" ></script>
+	<script src="jquery/jquery.browser.min.js" ></script>
+	<script src="jquery/jquery-ui-1.11.2.min.js" ></script>
+	<script src="jquery/modernizr-2.5.3.js" ></script>
+    <script src="jquery/jquery.maskedinput.js"></script>
+	
+    <!-- подключение w2ui -->
+	<link href="w2ui/w2ui-1.4.2.min.css" rel="stylesheet" />	
+    <script src="w2ui/w2ui-1.4.2.min.js"></script>
+		
+	<!-- подключение GWTK SE -->
+	<link href="gwtk.css" rel="stylesheet" />	    	
+	<script src="gwtkse.js"></script>
+
+	<style type="text/css">	
+		html, body, .dvMap 
+		{
+			height: 100%;
+		}		
+		.control-panel
+		{ 
+			z-index: 1000;
+			border: 1px solid grey; 
+			font-weight: initial; 
+			padding: 10px;
+			margin: 0px;
+			border-radius: 3px;
+			-webkit-user-select: none;			
+			background-color:#ffffff;    
+		}
+        .ico_google {
+            background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyBpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBXaW5kb3dzIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOkIyNUY1NDU1MUYwMTExRTVCOUVDOUU5QjkwRUM4M0Q0IiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOkIyNUY1NDU2MUYwMTExRTVCOUVDOUU5QjkwRUM4M0Q0Ij4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6QjI1RjU0NTMxRjAxMTFFNUI5RUM5RTlCOTBFQzgzRDQiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6QjI1RjU0NTQxRjAxMTFFNUI5RUM5RTlCOTBFQzgzRDQiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz4JT0e+AAADNUlEQVR42oSTW2gcVRjHf3NmdmY32ewma5O9pLnUbqpStbalUCRIrK1iC33x8qA+iE8qxCpobQTpQ4kURMXXPir0RV8iiApt8IZSQYuxrcRa04hpEmy6u9mdncvOxW930VcHvjnDmXN+5/v+3/9ocRzzf09106sGn5zF/nyOsFYjUSjS89gzpj51eF1rA9ZqdhzEIR2UvJSmdb9lVIaO9uEZmh+fRU9aMqcT+S7tcweOzdzS5pd/3njnlw9yzaBFUlm4UUggP/0ooimAO6oBpz9dxHA9frNdrtsOOzO9FPUYvVC6ZVyuLLFUX+XBwl7uzI5h6RbvX5mjDWwYipGKQ48XYCuNSzWbpYaDKeDhwSzu2ioqkBNvTw9zoLiH86sXGUz2o5SOLmFKurZhUNHA0hR3Z3s7MdHXQxxKydn2Wll0rbHOX82bPL39Ic4JpN5y2gKgSy2/Zk0Whix0P2RHpodDhRzFZILAdUgeOIwK485S/qivk08OsDtXJiVltDXYDOCJUZfJx0McKyISYFv02PdwS6Okjj6JagQuR0fu5y6pf/rCGTKJlIC2sOFHPFts8t54ha27QozJNIHMEUf4cuTa/imGSkO3qYSW4Kv1K7TbeGTrPj5avsBC7W9eHPF4e6JCQtk43g7qD7yEV8ijnCY3x8pE99zX8YihawYLlT9ZuTSHLrB1z+NlSftUuSYC2UTGPhFyGgZNWrv34K0sUb93L33pdAegIrGMwqAl2VVaLY6POcxOVFG6ze+1/WxYJ+jLDFPI9WLu3EVtS554dBxDNOoA2tYLRBg30mRzg5PlquRl8/2NSZ7/coZ3v+3HEcUzKZOh8gSeQHTT/M/mqhVruNKJN7bVmNkum/Um3yxP8eYPr9NopTm36HN6XtGwW2RKebY99wJ90v8oCLoatF1/crzGq+Oh9NNl/vohTv30Cm6QJKX5ogGcX9QIA8XxgzH5fA7TMllZudEFPDVUp9RfkVwsvlh6lNmLx/DDhDjP71wYJZGWjL++qgjEByceCRkQJ6rRkS4gnyptWi0r9dm1g/7sj9MEooWlXIi6N/Pf6JHL891VeEsgrz0ckba0jhD/CDAAlNBdiCvk80kAAAAASUVORK5CYII=) no-repeat center !important;
+        }        
+        .ico_osm {
+            background: url(data:image/png;base64,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) no-repeat center !important;
+        }
+        .ico_panorama {
+            background: url(data:image/png;base64,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) no-repeat center !important;
+        }
+	</style>
+
+	<script type="text/javascript">
+	<!-- описание иерархии дерева карт -->
+	var contenttree = [
+            {
+                id: 'fon', text: 'Фоновые карты', group: true, expanded: true,
+                nodes: [
+                    { id: 'Worldmap', clickable: true, img: 'ico_panorama' },
+                    { id: 'googleMap', clickable: true, img: 'ico_google' },
+                    { id: 'osmMap', clickable: true, img: 'ico_osm' }                    
+                ]
+            },
+            {
+                id: 'map', text: 'Карты', group: true, expanded: true,
+                nodes: [
+                    { id: 'NoginskEdit', text: 'Ногинский район', clickable: true },
+                    { id: 'dealers', text: 'Дилеры КБ Панорама', clickable: true, expanded: true }
+                ]
+            }
+        ];
+	
+	<!-- параметры компонента карты -->
+    var options = {
+        "url": "http://gisserver.info/GISWebServiceSE/service.php", "id": "200",                 
+        "center": [55.86, 38.349], "tilematrix": 13, "crs": 3857,                                
+        "tilematrixset": "GoogleMapsCompatible", "count": 2, "maxzoom": 17, "minzoom": 0,
+        "layers": [
+            {
+               "id": "Worldmap", "alias": "Карта мира", "selectObject": 0,
+               "url": "SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=Worldmap&STYLE=default&TILEMATRIXSET=%tilematrixset&TILEMATRIX=%z&TILEROW=%y&TILECOL=%x&FORMAT=image%2Fpng",
+               "keyssearchbyname": []
+            },
+            {
+                "id": "googleMap", "alias": "Google карта", "selectObject": 0,
+                "url": "http://mt1.google.com/vt/lyrs=m@250000000&hl=ru&src=app&x=%x&y=%y&z=%z&s=Galileo"
+            },
+            {
+                "id": "osmMap", "alias": "OpenStreetMap", "selectObject": 0,
+                "url": "http://b.tile.openstreetmap.org/%z/%x/%y.png"
+            },
+            {
+                "id": "dealers", "alias": "Дилеры КБ Панорама", "sheet": "Дилеры", "selectObject": 1, "legend": "*",
+                "url": "SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=dealers&STYLE=default&TILEMATRIXSET=%tilematrixset&TILEMATRIX=%z&TILEROW=%y&TILECOL=%x&FORMAT=image%2Fpng",
+                "keyssearchbyname": ["ObjName"]
+            },
+	        {
+	            "id": "NoginskEdit", "alias": "Ногинский район", "sheet": "NoginskEdit", "selectObject": 1, "selectsearch": 1, "legend": "*",
+	            "url": "SERVICE=WMS&REQUEST=GetMap&VERSION=1.3.0&FORMAT=image%2Fpng&LAYERS=NoginskEdit&BBOX=%bbox&HEIGHT=%h&WIDTH=%w&CRS=%crs&dt=%dt",
+	            "keyssearchbyname": ["ObjName"]
+	        }
+        ],
+        "errorTileUrl": "http://gisserver.ru/gwtkse/images/empty.gif", "controls": ["ruler", "textsearchinmap"],
+        "url_addresssearch": ["http://geocode-maps.yandex.ru/1.x/?geocode=", "Искать в Яндекс"],
+        "contenttree": contenttree
+    };
+	
+	<!-- параметры редактора карты -->	
+	var settings_mapEditor =
+    {
+        "maplayersid": ["NoginskEdit"]    // редактируемые слои данных
+        ,"functions": []                  // функциональные возможности ("create", "edit", "delete", "group")
+    };
+
+	<!-- инициализация компонента карты -->	
+	function initMap() {        	
+		if (window.GWTK) {
+			// карта
+			var Map = new GWTK.Map("dvMap", options);
+			// редактор карты
+			var mapEditor = new GWTK.mapEditor('1', Map, settings_mapEditor);
+			// панель росреестра
+			var mapRosreestr = new GWTK.rosreestr(Map);
+		}
+	}
+	</script>	
+</head>
+<body onload="initMap();" style="padding:0px; margin:0px; border:0px">     
+     <div id="dvMap" style="width:100%; height:100%;"></div>	            
+</body>
+</html>
